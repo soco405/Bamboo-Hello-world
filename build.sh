@@ -9,6 +9,8 @@ BUILD_DIR="app/bin";
 SRC_DIR="app/src";
 RES_DIR="app/res";
 LARGE_FILE="bigfile.bin";
+FILE_SIZE=2048; #2MB file
+#FILE_SIZE=2048000; #Uncomment for 2GB file
 
 # Show Java version
 java -version;
@@ -24,7 +26,7 @@ fi
 
 # Make the large file here
 echo 'Generating large file';
-dd if=/dev/urandom of="${MY_PWD}/${RES_DIR}/${LARGE_FILE}" bs=1024 count=32 iflag=fullblock;
+dd if=/dev/urandom of="${MY_PWD}/${RES_DIR}/${LARGE_FILE}" bs=1024 count=${FILE_SIZE} iflag=fullblock;
 echo ""
 
 # Build the class definition
