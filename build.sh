@@ -24,7 +24,7 @@ fi
 
 # Make the large file here
 echo 'Generating large file';
-dd if=/dev/urandom of="${MY_PWD}/${RES_DIR}/${LARGE_FILE}" bs=64M count=32 iflag=fullblock;
+dd if=/dev/urandom of="${MY_PWD}/${RES_DIR}/${LARGE_FILE}" bs=1024 count=32 iflag=fullblock;
 echo ""
 
 # Build the class definition
