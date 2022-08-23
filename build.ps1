@@ -1,16 +1,16 @@
 #! /usr/bin/env bash
 
-MY_PWD=$(pwd)
-PACKAGE_DIR="com/thalesgroup"
-PACKAGE_NAME="com.thalesgroup"
-CLASS_NAME="App"
-FULL_PACKAGE_NAME="${PACKAGE_NAME}.${CLASS_NAME}"
-BUILD_DIR="app/bin"
-SRC_DIR="app/src"
-RES_DIR="app/res"
-LARGE_FILE="bigfile.bin"
-FILE_SIZE=2048; #2MB file
-#FILE_SIZE=2048000; #Uncomment for 2GB file
+$MY_PWD=$(get-location)
+$PACKAGE_DIR="com/thalesgroup"
+$PACKAGE_NAME="com.thalesgroup"
+$CLASS_NAME="App"
+$FULL_PACKAGE_NAME="${PACKAGE_NAME}.${CLASS_NAME}"
+$BUILD_DIR="app/bin"
+$SRC_DIR="app/src"
+$RES_DIR="app/res"
+$LARGE_FILE="bigfile.bin"
+$FILE_SIZE=2048; #2MB file
+#$FILE_SIZE=2048000; #Uncomment for 2GB file
 
 # Show Java version
 java -version;
