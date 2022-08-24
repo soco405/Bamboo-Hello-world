@@ -32,7 +32,7 @@ Write-Output "$JAVA_VERSION"
 }
 else
 {
-exit 1
+exit 0
 }
 Write-Output ""
 
