@@ -26,13 +26,16 @@ if ($JAVA_RETURN_CODE -gt 0)
 
 # Make the large file here
 Write-Output 'Generating large file'
-dd if=/dev/urandom of="${MY_PWD}\${RES_DIR}\${LARGE_FILE}" bs=1024 count=${FILE_SIZE} iflag=fullblock
+#dd if=/dev/urandom of="${MY_PWD}\${RES_DIR}\${LARGE_FILE}" bs=1024 count=${FILE_SIZE} iflag=fullblock
+$out = new-object byte[] $twoMBfile; 
+(new-object Random).NextBytes($out); 
+[IO.File]::WriteAllBytes('${MY_PWD}\${RES_DIR}\${LARGE_FILE}', $out)
 Write-Output ""
 
 # Build the class definition
 Write-Output 'Generating class definitions'
-set-location "${MY_PWD}\$SRC_DIR"
-javac -d "${MY_PWD}\${BUILD_DIR}/classes" "${PACKAGE_DIR}\${CLASS_NAME}.java"
+set-location '${MY_PWD}\$SRC_DIR'
+javac -d '${MY_PWD}\${BUILD_DIR}/classes' '${PACKAGE_DIR}\${CLASS_NAME}.java'
 Write-Output ""
 
 # Build the jar
