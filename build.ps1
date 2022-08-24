@@ -45,7 +45,7 @@ Write-Output ""
 # Build the jar
 Write-Output 'Packaging jar file'
 set-location "${BUILD_DIR}\classes";
-jar cfe "${${BUILD_DIR}\jar\${CLASS_NAME}.jar" ${FULL_PACKAGE_NAME} "${PACKAGE_DIR}\${CLASS_NAME}.class" "..\../res\${LARGE_FILE}";
+jar cfe "${BUILD_DIR}\jar\${CLASS_NAME}.jar" ${FULL_PACKAGE_NAME} "${PACKAGE_DIR}\${CLASS_NAME}.class" "..\../res\${LARGE_FILE}";
 Write-Output ""
 
 # Show contents of jar
