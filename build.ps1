@@ -1,3 +1,7 @@
+######
+#Don't use these, they are for reference
+#######
+
 #Dending on the size of the file you want to create, you can swap out varibles
 $twoMBfile=2048576
 $oneGBfile=1024288000
