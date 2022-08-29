@@ -98,4 +98,18 @@ dependencies:
   plans: []
 other:
   concurrent-build-plugin: system-default
-
+---
+version: 2
+plan:
+  key: THALSPECS
+plan-permissions:
+- users:
+  - admin
+  permissions:
+  - view
+  - edit
+  - build
+  - clone
+  - admin
+  - viewConfiguration
+...
