@@ -2,14 +2,11 @@
 version: 2
 plan:
 project-key: THALSPECS
+  key: HEL
 key: HEL
 plan-permissions:
-  - users:
-    - admin
-    permissions:
-    - view
-    - edit
-    - build
-    - clone
-    - admin
-    - viewConfiguration
+- roles:
+  - logged-in
+  - anonymous
+  permissions:
+  - view
