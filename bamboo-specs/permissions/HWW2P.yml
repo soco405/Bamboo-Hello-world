@@ -3,14 +3,13 @@ version: 2
 plan:
   project-key: THALSPECS
   key: HELW2
-  name: Hello-World-Windows-2
 plan-permissions:
-- users:
-  - admin
-  permissions:
-  - view
-  - edit
-  - build
-  - clone
-  - admin
-  - viewConfiguration
+  - users:
+    - admin
+      permissions:
+      - view
+      - edit
+      - build
+      - clone
+      - admin
+      - viewConfiguration
