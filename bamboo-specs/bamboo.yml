@@ -3,7 +3,7 @@
 !include 'build/Hello_World_Linux-2-Build.yml'
 ---
 !include 'build/Hello_World_Windows-2-Build.yml'
-#---
-#!include 'permissions/HWW2P.yml'
+---
+!include 'permissions/HWW2P.yml'
 #---
 #!include 'permissions/HWW2P.yml'
