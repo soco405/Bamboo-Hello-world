@@ -5,5 +5,5 @@
 !include 'build/Hello_World_Windows-2-Build.yml'
 ---
 !include 'permissions/HWL2P.yml'
-#---
-#!include 'permissions/HWW2P.yml'
+---
+!include 'permissions/HWW2P.yml'

@@ -1,8 +1,7 @@
 ---
 version: 2
 plan:
-  project-key: THALSPECS
-  key: HELW2
+  key: THALSPECS-HELW2
 plan-permissions:
 - roles:
   - logged-in
