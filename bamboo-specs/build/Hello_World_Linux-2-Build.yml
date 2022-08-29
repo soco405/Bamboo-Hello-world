@@ -1,0 +1,195 @@
+---
+version: 2
+plan:
+  project-key: THAL
+  key: HEL
+  name: Hello-World-Linux-2
+stages:
+- Default Stage:
+    manual: false
+    final: false
+    jobs:
+    - Default Job
+Default Job:
+  key: JOB1
+  tasks:
+  - checkout:
+      force-clean-build: 'true'
+      description: Checkout Default Repository
+  - script:
+      interpreter: SHELL
+      scripts:
+      - |-
+        #!/bin/bash
+
+        # Show Java version
+        java -version;
+        JAVA_RETURN_CODE=$?;
+        echo ""
+
+        # Java was able to execute?
+        if [ $JAVA_RETURN_CODE -gt 0 ]; then
+            # Exit with failure
+            echo "Unable to run 'java -version'";
+            exit $JAVA_RETURN_CODE;
+        fi
+      description: Test Java Environment
+  - script:
+      interpreter: SHELL
+      scripts:
+      - |-
+        #!/bin/bash
+
+        twoMBfile=2048
+        twoGBfile=2048000
+
+
+        dd if=/dev/urandom of=./'${bamboo.shortPlanName}-build-${bamboo.buildNumber}.file' bs=1024 count=$twoMBfile iflag=fullblock
+      working-dir: app/res
+      description: Build big file
+  - script:
+      interpreter: SHELL
+      scripts:
+      - |-
+        #!/bin/bash
+
+        MY_PWD=$(pwd);
+        PACKAGE_DIR="com/thalesgroup";
+        PACKAGE_NAME="com.thalesgroup";
+        CLASS_NAME="App";
+        FULL_PACKAGE_NAME="${PACKAGE_NAME}.${CLASS_NAME}";
+        BUILD_DIR="app/bin";
+        SRC_DIR="app/src";
+
+        # Build the class definition
+        echo 'Generating class definitions';
+        cd "${MY_PWD}/$SRC_DIR";
+        javac -d "${MY_PWD}/${BUILD_DIR}/classes" "${PACKAGE_DIR}/${CLASS_NAME}.java";
+        echo ""
+
+        # Build the jar
+        echo 'Packaging jar file'
+        cd "${MY_PWD}/${BUILD_DIR}/classes";
+        jar cfe "${MY_PWD}/${BUILD_DIR}/jar/${CLASS_NAME}.jar" ${FULL_PACKAGE_NAME} "${PACKAGE_DIR}/${CLASS_NAME}.class" "../../res/${bamboo.LargeFile}";
+        echo ""
+
+        # Show contents of jar
+        echo 'Contents of jar:';
+        jar tf "${MY_PWD}/${BUILD_DIR}/jar/${CLASS_NAME}.jar";
+        echo ""
+      description: Build the Jar
+  - script:
+      interpreter: SHELL
+      scripts:
+      - |-
+        #!/bin/bash
+
+        MY_PWD=$(pwd);
+        BUILD_DIR="app/bin";
+        CLASS_NAME="App";
+
+        # Show contents of jar
+        echo 'Contents of jar:';
+        jar tf "${MY_PWD}/${BUILD_DIR}/jar/${CLASS_NAME}.jar";
+        echo ""
+
+        # Run the jar
+        echo 'Running of jar:';
+        echo ""
+        cd "${MY_PWD}";
+        java -jar "${MY_PWD}/${BUILD_DIR}/jar/${CLASS_NAME}.jar";
+      description: Run Jar
+  - script:
+      interpreter: SHELL
+      scripts:
+      - |-
+        #!/bin/bash
+        date
+        #cpu use threshold
+        cpu_load='5'
+         #mem idle threshold
+        mem_threshold='100'
+         #disk use threshold
+        disk_threshold='90'
+        #---cpu
+        cpu_usage () {
+        cpu_use_float=$(top -bn1 | grep load | awk '{printf "%.2f\n", $(NF-2)}')
+        cpu_use=$(echo "$cpu_use_float" | cut -d "." -f 1 | cut -d "," -f 1)
+        echo "cpu load: $cpu_use"
+            if [[ "$cpu_use" -gt "$cpu_load" ]]
+            then
+                echo "cpu warning!!!"
+                exit 1
+            else
+                echo "cpu ok!!!"
+        fi
+        }
+        #---mem
+        mem_usage () {
+         #MB units
+        mem_free=$(free -m | grep "Mem" | awk '{print $4+$6}')
+         echo "memory space remaining : $mem_free MB"
+        if [ "$mem_free" -lt $mem_threshold  ]
+            then
+                echo "mem warning!!!"
+                exit 1
+            else
+                echo "mem ok!!!"
+        fi
+        }
+        #---disk
+        disk_usage () {
+        disk_use=$(df -P | grep /dev | grep -v -E '(tmp|boot)' | awk '{print $5}' | cut -f 1 -d "%")
+         echo "disk usage : $disk_use%"
+        if [ "$disk_use" -gt $disk_threshold ]
+            then
+                echo "disk warning!!!"
+                exit 1
+            else
+                echo "disk ok!!!"
+        fi
+
+
+        }
+        cpu_usage
+        mem_usage
+        disk_usage
+      description: CPU-mem-Disk
+  requirements:
+  - agentname: Linux-2
+  artifact-subscriptions: []
+repositories:
+- Bamboo-hello-world:
+    scope: project
+triggers:
+- polling:
+    period: '180'
+branches:
+  create: manually
+  delete: never
+  link-to-jira: true
+notifications: []
+labels: []
+dependencies:
+  require-all-stages-passing: false
+  enabled-for-branches: true
+  block-strategy: none
+  plans:
+  - THAL-HEL10
+other:
+  concurrent-build-plugin: system-default
+---
+version: 2
+plan:
+  key: THAL-HEL
+plan-permissions:
+- users:
+  - admin
+  permissions:
+  - view
+  - edit
+  - build
+  - clone
+  - admin
+  - viewConfiguration
+...

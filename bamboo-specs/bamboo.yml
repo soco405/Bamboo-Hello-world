@@ -1,14 +1,8 @@
+#https://docs.atlassian.com/bamboo-spec-docs/latest
 ---
-version: 2
-plan:
-  project-key: MARS
-  key: ROCKET
-  name: Build the rockets
-stages:
-  - Build hull:
-    - Build
-
-Build:
-  tasks:
-    - script:
-      - echo 'Hello World!'
+!include 'build.plan.yml'
+---
+!include 'build.plan.yml'
+---
+!include 'build.plan.yml'
+---

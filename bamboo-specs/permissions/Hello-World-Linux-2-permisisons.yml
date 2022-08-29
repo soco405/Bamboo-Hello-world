@@ -1,0 +1,14 @@
+---
+version: 2
+plan:
+  key: THAL-HEL
+plan-permissions:
+- users:
+  - admin
+  permissions:
+  - view
+  - edit
+  - build
+  - clone
+  - admin
+  - viewConfiguration

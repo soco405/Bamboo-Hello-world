@@ -1,0 +1,101 @@
+---
+version: 2
+plan:
+  project-key: THAL
+  key: HELW2
+  name: Hello-World-Windows-2
+stages:
+- Default Stage:
+    manual: false
+    final: false
+    jobs:
+    - Default Job
+Default Job:
+  key: JOB1
+  tasks:
+  - checkout:
+      force-clean-build: 'true'
+      description: Checkout Default Repository
+  - script:
+      interpreter: WINDOWS_POWER_SHELL
+      scripts:
+      - |-
+        # Show Java version
+        $JAVA_VERSION="(Get-Command java | Select-Object -ExpandProperty Version).tostring()"
+
+        if ($JAVA_VERSION -gt 1)
+        {
+        Write-Output "$JAVA_VERSION"
+        }
+        else
+        {
+        exit 0
+        }
+      description: Check for Java
+  - script:
+      interpreter: WINDOWS_POWER_SHELL
+      scripts:
+      - "#Dending on the size of the file you want to create, you can swap out varibles\n$twoMBfile=2048576\n$oneGBfile=1024288000\n$twoGBfile=2048576000\n\n#Creates a large file with plan and build identifiers.\n$out = new-object byte[] $twoMBfile; \n(new-object Random).NextBytes($out); \n[IO.File]::WriteAllBytes(${bamboo.LargeFile}, $out)"
+      working-dir: app/res
+      description: Build Large File
+  - script:
+      interpreter: WINDOWS_POWER_SHELL
+      scripts:
+      - |-
+        #Building Class Definition
+
+        Write-Output 'Generating class definitions'
+
+        javac -d "..\bin\classes\" ".\com\thalesgroup\App.java"
+      working-dir: app\src
+      description: Build Class Definition
+  - script:
+      interpreter: WINDOWS_POWER_SHELL
+      scripts:
+      - |-
+        # Build the jar
+        Write-Output 'Packaging jar file'
+        jar cfe "..\jar\App.jar" com.thalesgroup.App "com\thalesgroup\App.class"
+      working-dir: app\bin\classes
+      description: Build the Jar
+  - script:
+      interpreter: WINDOWS_POWER_SHELL
+      scripts:
+      - |-
+        #need to add large file
+        Write-Output 'add large file'
+        jar -uf .\bin\jar\App.jar res\${bamboo.LargeFile}
+        #show contents of Jar
+        jar tf ".\bin\jar\App.jar"
+        Write-Output 'Running jar file'
+        java -jar ".\bin\jar\App.jar"
+      working-dir: app
+      description: Add Large File
+  - script:
+      interpreter: WINDOWS_POWER_SHELL
+      scripts:
+      - "date\nWrite-Host \"Computer Name:\" $computer\n#cpu use threshold\n$Thresh_cpu_percent='60'\n #mem idle threshold\n$mem_threshold='90'\n #disk use threshold\n$disk_threshold='90'\n\n\n$computer = Get-Content env:computername\n    # Lets create a re-usable WMI method for CPU stats\n    $ProcessorStats = Get-WmiObject win32_processor -computer $computer\n    $ComputerCpu = $ProcessorStats.LoadPercentage \n\n    # Lets create a re-usable WMI method for memory stats\n    $OperatingSystem = Get-WmiObject win32_OperatingSystem -computer $computer\n    # Lets grab the free memory\n    $FreeMemory = $OperatingSystem.FreePhysicalMemory\n    # $FreeMemoryinMb = [math]::truncate($FreeMemory/1024)\n    # # Lets grab the total memory\n    $TotalMemory = $OperatingSystem.TotalVisibleMemorySize\n    $Membypercent =[math]::truncate(($FreeMemory/$TotalMemory)*100)\n    $Diskbypercent=(get-psdrive c | % { $_.free/($_.used + $_.free) } | % tostring p)\n    \n    if ($ComputerCpu -lt $Thresh_cpu_percent)\n{\n    Write-Host \"CPU is good: $ComputerCpu%\"\n}\nelse\n{\nwrite-output \"CPU is too high $ComputerCpu%\"\nexit  1} \n\nif ($Membypercent -lt $mem_threshold)\n{\n    Write-Host \"Memory is good: $Membypercent%\"\n}\nelse\n{\n    Write-Host \"Memory is too high: $Membypercent%\"\nexit  1} \n\nif ($Diskbypercent -lt $disk_threshold)\n{\n    Write-Host \"Diskspace is good: $Diskbypercent%\"\n}\nelse\n{\n    Write-Host \"Diskspace is too high: $Diskbypercent%\"\nexit  1}"
+      description: Check Enviroment
+  requirements:
+  - agentname: Windows-2020
+  artifact-subscriptions: []
+repositories:
+- Bamboo-hello-world:
+    scope: project
+triggers:
+- polling:
+    period: '180'
+branches:
+  create: manually
+  delete: never
+  link-to-jira: true
+notifications: []
+labels: []
+dependencies:
+  require-all-stages-passing: false
+  enabled-for-branches: true
+  block-strategy: none
+  plans: []
+other:
+  concurrent-build-plugin: system-default
+
