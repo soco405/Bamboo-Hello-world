@@ -1,7 +1,7 @@
 ---
 version: 2
 plan:
-  project-key: THAL
+  project-key: THALSPECS
   key: HEL
   name: Hello-World-Linux-2
 stages:

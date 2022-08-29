@@ -1,7 +1,9 @@
 ---
 version: 2
 plan:
-  key: THAL-HEL
+  project-key: THALSPECS
+  key: HEL
+  name: Hello-World-Linux-2
 plan-permissions:
 - users:
   - admin

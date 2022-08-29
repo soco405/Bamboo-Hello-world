@@ -1,7 +1,9 @@
 ---
 version: 2
 plan:
-  key: THAL-HELW2
+  project-key: THALSPECS
+  key: HELW2
+  name: Hello-World-Windows-2
 plan-permissions:
 - users:
   - admin
