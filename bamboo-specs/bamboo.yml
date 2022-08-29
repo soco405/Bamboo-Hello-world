@@ -4,7 +4,7 @@
 ---
 !include 'build/Hello_World_Windows-2-Build.yml'
 ---
-!include 'permissions/Hello_World-Linux-2-permissions.yml'
+!include 'permissions/Hello_World_Linux-2-permissions.yml'
 ---
-!include 'permissions/Hello_World-Windows-2-permissions.yml'
+!include 'permissions/Hello-World-Windows-2-permisisons.yml'
 ---
