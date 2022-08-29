@@ -1,8 +1,10 @@
 #https://docs.atlassian.com/bamboo-spec-docs/latest
 ---
-!include 'build.plan.yml'
+!include 'build/Hello_World_Linux-2-Build.yml'
 ---
-!include 'build.plan.yml'
+!include 'build/Hello_World_Windows-2-Build.yml'
 ---
-!include 'build.plan.yml'
+!include 'permissions/Hello_World_Linux-2-perm.yml'
+---
+!include 'permissions/Hello_World_Windows-2-perm.yml'
 ---
