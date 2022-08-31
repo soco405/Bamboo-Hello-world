@@ -10,8 +10,10 @@ $disk_threshold='90'
 
 $computer = Get-Content env:computername
     # Lets create a re-usable WMI method for CPU stats
-    $ProcessorStats = Get-WmiObject win32_processor -computer $computer
-    $ComputerCpu = $ProcessorStats.LoadPercentage 
+    $CPUAveragePerformance = (GET-COUNTER -Counter "\Processor(_Total)\% Processor Time" -SampleInterval 2 -MaxSamples 5 |Select-Object -ExpandProperty countersamples | Select-Object -ExpandProperty cookedvalue | Measure-Object -Average).average 
+    $CPUAveragePerformanceRD =[math]::Round($CPUAveragePerformance,2)
+    #$ProcessorStats = Get-WmiObject win32_processor -computer $computer
+    #$ComputerCpu = $ProcessorStats.LoadPercentage 
 
     # Lets create a re-usable WMI method for memory stats
     $OperatingSystem = Get-WmiObject win32_OperatingSystem -computer $computer
@@ -23,13 +25,13 @@ $computer = Get-Content env:computername
     $Membypercent =[math]::truncate(($FreeMemory/$TotalMemory)*100)
     $Diskbypercent=(get-psdrive c | % { $_.free/($_.used + $_.free) } | % tostring p)
     
-    if ($ComputerCpu -lt $Thresh_cpu_percent)
+    if ($CPUAveragePerformanceRD -lt $Thresh_cpu_percent)
 {
-    Write-Host "CPU is good: $ComputerCpu%"
+    Write-Host "CPU is good: $CPUAveragePerformanceRD%"
 }
 else
 {
-write-output "CPU is too high $ComputerCpu%"
+write-output "CPU is too high $CPUAveragePerformanceRD%"
 exit  1} 
 
 if ($Membypercent -lt $mem_threshold)
